@@ -5,7 +5,17 @@ import {
   Box, Blocks
 } from 'lucide-react';
 
-export type BusinessView = 'clearance' | 'swarm' | 'leads' | 'settlements' | 'invoices';
+export type BusinessView =
+  | 'overview'
+  | 'transactions'
+  | 'clearance'
+  | 'swarm'
+  | 'leads'
+  | 'settlements'
+  | 'invoices'
+  | 'analytics'
+  | 'integrations'
+  | 'settings';
 
 interface SidebarProps {
   transactionCount: number;
@@ -59,21 +69,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Navigation Matching Reference Image */}
         <nav className="p-2.5 space-y-1 text-sm font-medium">
-          {navItem('Overview', Box, 'clearance')}
+          {navItem('Overview', Box, 'overview')}
 
-          {navItem('Transactions', Layers, 'clearance',
+          {navItem(
+            'Transactions',
+            Layers,
+            'transactions',
             <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-blue-600 text-white shadow-xs">
               {transactionCount}
             </span>
           )}
 
-          {navItem('Agent Swarm', Users, 'swarm',
+          {navItem(
+            'Agent Swarm',
+            Users,
+            'swarm',
             activeView === 'swarm' ? undefined : (
               <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
             )
           )}
 
-          {navItem('Leads', Target, 'leads',
+          {navItem(
+            'Leads',
+            Target,
+            'leads',
             <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-purple-100 text-purple-700">
               {leadCount}
             </span>
@@ -83,11 +102,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           {navItem('Invoices', FileText, 'invoices')}
 
-          {navItem('Analytics', BarChart2, 'clearance')}
+          {navItem('Analytics', BarChart2, 'analytics')}
 
-          {navItem('Integrations', Blocks, 'clearance')}
+          {navItem('Integrations', Blocks, 'integrations')}
 
-          {navItem('Settings', Settings, 'clearance')}
+          {navItem('Settings', Settings, 'settings')}
         </nav>
       </div>
 
