@@ -1,0 +1,115 @@
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-quartz.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #f6f8fb;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Minimalist Light AG Grid Quartz Theme (matching reference SaaS UI) */
+.ag-theme-quartz {
+  --ag-border-radius: 0px !important;
+  --ag-wrapper-border-radius: 0px !important;
+  --ag-header-cell-border-radius: 0px !important;
+  --ag-cell-border-radius: 0px !important;
+  --ag-card-radius: 0px !important;
+  --ag-background-color: #ffffff;
+  --ag-header-background-color: #fbfcfd;
+  --ag-odd-row-background-color: #ffffff;
+  --ag-row-hover-color: #f8fafc;
+  --ag-border-color: #eef2f6;
+  --ag-foreground-color: #1e293b;
+  --ag-header-foreground-color: #475569;
+  --ag-font-family: 'Inter', -apple-system, sans-serif;
+  --ag-font-size: 13px;
+  --ag-grid-size: 8px;
+  --ag-header-height: 48px;
+  --ag-row-height: 56px;
+  --ag-selected-row-background-color: #f0fdf4;
+  border-radius: 0px !important;
+}
+
+.ag-theme-quartz .ag-header-cell {
+  font-weight: 600;
+  font-size: 13px;
+  color: #475569;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+.ag-theme-quartz .ag-header-cell-label {
+  font-weight: 600;
+  color: #475569;
+}
+
+.ag-theme-quartz .ag-cell {
+  padding-left: 14px;
+  padding-right: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.ag-theme-quartz .ag-row {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+}
+
+.ag-theme-quartz .ag-row:hover {
+  background-color: #f8fafc !important;
+}
+
+.ag-theme-quartz .ag-root-wrapper,
+.ag-theme-quartz .ag-root-wrapper-body,
+.ag-theme-quartz .ag-root,
+.ag-theme-quartz .ag-header,
+.ag-theme-quartz .ag-header-row,
+.ag-theme-quartz .ag-header-cell,
+.ag-theme-quartz .ag-header-viewport,
+.ag-theme-quartz .ag-header-container,
+.ag-theme-quartz .ag-pinned-left-header,
+.ag-theme-quartz .ag-pinned-right-header {
+  border-radius: 0px !important;
+  border-top-left-radius: 0px !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+
+.ag-theme-quartz .ag-root-wrapper {
+  border: 1px solid #e2e8f0;
+  border-radius: 0px !important;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+/* AG Grid Master-Detail Child Table Styles */
+.ag-watermark {
+  display: none !important;
+}
+
+.ag-details-row {
+  padding: 0 !important;
+  background-color: #f8fafc !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+}
+
+.ag-details-grid {
+  height: 100%;
+}
+
+.ag-theme-quartz .ag-group-expanded .ag-icon-tree-open,
+.ag-theme-quartz .ag-group-contracted .ag-icon-tree-closed {
+  color: #2563eb;
+  font-size: 14px;
+}

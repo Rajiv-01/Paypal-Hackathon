@@ -1,0 +1,64 @@
+# Dependencies
+node_modules/
+*/node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Production & Build outputs
+dist/
+*/dist/
+**/dist/
+build/
+*/build/
+out/
+*/out/
+*.tsbuildinfo
+
+# Environment and Secrets (CRITICAL)
+.env
+.env.*
+!.env.example
+*.env
+*.env.*
+!*.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Local credentials & keys
+*.local
+*.pem
+*.key
+*.cert
+*.crt
+id_rsa*
+*.pfx
+*.p12
+
+# Logs and runtime data
+*.log
+logs/
+*.sqlite
+*.sqlite3
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local runner shims & temp files
+*.cmd
+backend/powershell.cmd
+frontend/powershell.cmd
+powershell.cmd
+tmp/
+temp/
