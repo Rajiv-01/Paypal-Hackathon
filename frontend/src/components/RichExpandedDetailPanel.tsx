@@ -457,7 +457,7 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
             </div>
 
             {/* Timeline Nodes */}
-            <div className="space-y-2 relative max-h-[190px] overflow-y-auto pr-1">
+            <div className="space-y-2 relative max-h-[165px] overflow-y-auto pr-1">
               {/* Timeline connector line */}
               <div className="absolute left-2.5 top-2 bottom-2 w-0.5 bg-slate-200" />
 

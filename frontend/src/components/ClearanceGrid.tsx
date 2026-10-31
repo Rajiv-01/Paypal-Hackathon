@@ -531,7 +531,7 @@ export const ClearanceGrid: React.FC<ClearanceGridProps> = ({
               onFirstDataRendered={handleFirstDataRendered}
               masterDetail={true}
               detailCellRenderer={RichExpandedDetailPanel}
-              detailRowHeight={320}
+              detailRowHeight={395}
               isRowMaster={() => true}
               rowSelection="single"
               animateRows={true}
