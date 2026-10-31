@@ -336,7 +336,7 @@ export const GridSidebarDeck: React.FC<GridSidebarDeckProps> = ({
           {activeTab === 'clearance3d' && (
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/30">
               <div className="flex flex-col items-center">
-                <ThreeSecurityBadge riskScore={mandate.risk_score} />
+                <ThreeSecurityBadge status={mandate.status} />
                 <div className="mt-2 text-center">
                   <span className="text-xs font-bold text-slate-800 block">
                     AP2 Cryptographic Token

@@ -2,28 +2,23 @@ import React from 'react';
 import {
   Search,
   Calendar,
-  Plus,
   ArrowUpRight,
   Sparkles,
-  Flame,
   Zap,
-  Bot,
   Package
 } from 'lucide-react';
 import { CartMandate } from '../types';
 
 interface TopHeaderProps {
   mandates: CartMandate[];
-  onOpenSimulate: () => void;
-  onTriggerBurst: () => void;
+  onOpenSimulate?: () => void;
+  onTriggerBurst?: () => void;
   searchTerm: string;
   onSearchChange: (val: string) => void;
 }
 
 export const TopHeader: React.FC<TopHeaderProps> = ({
   mandates,
-  onOpenSimulate,
-  onTriggerBurst,
   searchTerm,
   onSearchChange
 }) => {
@@ -67,27 +62,6 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             <Calendar className="w-3.5 h-3.5 text-slate-500" />
             <span>Today, Oct 12, 2026</span>
           </div>
-
-          {/* Stream Burst Button */}
-          <button
-            type="button"
-            onClick={onTriggerBurst}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 border border-slate-200 shadow-xs active:scale-95 transition-all"
-            title="Stream a burst of agent deals"
-          >
-            <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-            <span>Stream Burst</span>
-          </button>
-
-          {/* Primary Simulate Agent Button */}
-          <button
-            type="button"
-            onClick={onOpenSimulate}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-700 active:scale-95 text-xs font-semibold text-white shadow-xs transition-all"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Simulate Agent</span>
-          </button>
         </div>
       </div>
 
@@ -219,13 +193,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <div className="text-[10.5px] text-slate-300 leading-snug line-clamp-2">
             Autonomous negotiations running at <strong className="text-white font-semibold">14ms latency</strong>. Zero breach incidents.
           </div>
-          <div>
-            <button
-              onClick={onOpenSimulate}
-              className="text-[10px] text-blue-400 hover:text-blue-300 font-semibold inline-flex items-center gap-1 transition-colors"
-            >
-              <span>Test new negotiation →</span>
-            </button>
+          <div className="flex items-center gap-1.5 text-[10px] text-emerald-400 font-semibold font-mono">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>AP2 Gateway Active &amp; Guarded</span>
           </div>
         </div>
       </div>

@@ -42,12 +42,12 @@ const seedMandates: CartMandate[] = [
   {
     mandate_id:     'req_init_1001',
     consumer_agent: 'Meta Muse',
-    item:           'H100 GPU Cluster Blocks',
-    agreed_price:   50.00,
-    quantity:       100,
-    total_value:    5000.00,
+    item:           'NVIDIA H100 Tensor Core AI Accelerator (80GB SXM5)',
+    agreed_price:   850.00,
+    quantity:       10,
+    total_value:    8500.00,
     risk_score:     14,
-    transcript:     `[00:00:01] <Consumer: Meta Muse> Inbound request for 100 units of H100 GPU Cluster Blocks at $45.00/unit.\n[00:00:02] <Merchant: Autonopay Agent> Minimum price rule enforced ($50.00/unit minimum). Counter-offer transmitted.\n[00:00:03] <Consumer: Meta Muse> Evaluated SLA parameters. Counter accepted at $50.00/unit.\n[00:00:04] <Merchant: Autonopay Agent> AP2 Mandate synthesized. Total: $5,000.00. Awaiting merchant clearance.`,
+    transcript:     `[00:00:01] <Consumer: Meta Muse> Inbound request for 10 units of NVIDIA H100 Tensor Core AI Accelerator (80GB SXM5) at bid $780.00/unit.\n[00:00:02] <Merchant: Autonopay Agent> Minimum enterprise wholesale rule enforced ($850.00/unit minimum). Counter-offer transmitted.\n[00:00:03] <Consumer: Meta Muse> Evaluated SLA parameters and FIPS compliance. Counter accepted at $850.00/unit.\n[00:00:04] <Merchant: Autonopay Agent> AP2 Mandate synthesized. Total: $8,500.00. Awaiting merchant clearance.`,
     status:         'PENDING_APPROVAL',
     created_at:     new Date(Date.now() - 120000).toISOString(),
     product_id:     'prod_gpu',
@@ -59,12 +59,12 @@ const seedMandates: CartMandate[] = [
   {
     mandate_id:     'req_init_1002',
     consumer_agent: 'AutoGPT Fleet',
-    item:           'Enterprise API Tokens (Tier-1)',
-    agreed_price:   22.00,
-    quantity:       250,
-    total_value:    5500.00,
+    item:           'Industrial IoT Edge Gateway Server (Gen-5 Dual 10GbE)',
+    agreed_price:   120.00,
+    quantity:       50,
+    total_value:    6000.00,
     risk_score:     8,
-    transcript:     `[00:00:01] <Consumer: AutoGPT Fleet> Protocol Handshake: Requesting 250 Enterprise API Throughput Tokens at bid $18.00.\n[00:00:02] <Merchant: Autonopay Agent> Peak bandwidth policy requires $22.00/token minimum. Counter proposed.\n[00:00:03] <Consumer: AutoGPT Fleet> Autonomous treasury rules verified. Counter accepted at $22.00/token.\n[00:00:04] <Merchant: Autonopay Agent> Mandate locked at $5,500.00. Routed to command center.`,
+    transcript:     `[00:00:01] <Consumer: AutoGPT Fleet> Protocol Handshake: Requesting 50 Industrial IoT Edge Gateway Server units at bid $105.00.\n[00:00:02] <Merchant: Autonopay Agent> Factory reserve policy requires $120.00/unit minimum with 3-year enterprise warranty. Counter proposed.\n[00:00:03] <Consumer: AutoGPT Fleet> Autonomous treasury rules verified. Counter accepted at $120.00/unit.\n[00:00:04] <Merchant: Autonopay Agent> Mandate locked at $6,000.00. Routed to command center.`,
     status:         'SETTLED',
     created_at:     new Date(Date.now() - 360000).toISOString(),
     checkout_url:   'https://sandbox.paypal.com/checkout/mock',
@@ -77,12 +77,12 @@ const seedMandates: CartMandate[] = [
   {
     mandate_id:     'req_init_1003',
     consumer_agent: 'Synthetix Bot',
-    item:           'Synthetic Financial Market Feeds',
-    agreed_price:   85.00,
-    quantity:       60,
-    total_value:    5100.00,
+    item:           'Autonomous Neural Vision Sensor Array (Edge AI Station)',
+    agreed_price:   245.00,
+    quantity:       25,
+    total_value:    6125.00,
     risk_score:     68,
-    transcript:     `[00:00:01] <Consumer: Synthetix Bot> Inbound bid: 60 units of Synthetic Financial Market Feeds at $70.00/unit.\n[00:00:02] <Merchant: Autonopay Agent> Anomaly telemetry warning: Origin subnet untrusted. Counter-offering non-refundable pricing of $85.00/unit.\n[00:00:03] <Consumer: Synthetix Bot> Counter-offer accepted immediately.\n[00:00:04] <Merchant: Autonopay Agent> Risk score evaluated: 68% (ELEVATED). Mandatory human authorization required.`,
+    transcript:     `[00:00:01] <Consumer: Synthetix Bot> Inbound procurement bid: 25 units of Autonomous Neural Vision Sensor Array at $210.00/unit.\n[00:00:02] <Merchant: Autonopay Agent> Anomaly telemetry warning: Origin subnet untrusted. Counter-offering non-refundable pricing of $245.00/unit with air-gapped transit.\n[00:00:03] <Consumer: Synthetix Bot> Counter-offer accepted immediately.\n[00:00:04] <Merchant: Autonopay Agent> Risk score evaluated: 68% (ELEVATED). Mandatory human authorization required for PayPal release.`,
     status:         'PENDING_APPROVAL',
     created_at:     new Date(Date.now() - 60000).toISOString(),
     product_id:     'prod_feeds',
@@ -126,7 +126,7 @@ app.get('/api/products', (_req: Request, res: Response) => {
 });
 
 app.get('/api/products/:product_id', (req: Request, res: Response) => {
-  const product = getProductById(req.params.product_id);
+  const product = getProductById(req.params.product_id as string);
   if (!product) return res.status(404).json({ error: 'Product not found' });
   res.json(product);
 });
@@ -159,7 +159,7 @@ app.post('/api/session/start', async (req: Request, res: Response) => {
 });
 
 app.get('/api/sessions/buyer/:buyer_id', (req: Request, res: Response) => {
-  res.json(getSessionsByBuyer(req.params.buyer_id));
+  res.json(getSessionsByBuyer(req.params.buyer_id as string));
 });
 
 app.get('/api/sessions', (_req: Request, res: Response) => {

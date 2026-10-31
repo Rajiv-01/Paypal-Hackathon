@@ -20,7 +20,7 @@ export const App: React.FC = () => {
   const [searchTerm,       setSearchTerm]       = useState('');
   const [activeView,       setActiveView]       = useState<BusinessView>('transactions');
   const [notifications,    setNotifications]    = useState<A2ASession[]>([]);
-  const [swarmStats,       setSwarmStats]       = useState<SwarmStats | null>(null);
+  const [,                 setSwarmStats]       = useState<SwarmStats | null>(null);
   const gridRef = useRef<AgGridReact<CartMandate>>(null);
 
   const { lastJsonMessage } = useWebSocket<WebSocketMessage>('ws://localhost:3001', {
@@ -59,7 +59,7 @@ export const App: React.FC = () => {
       if (gridRef.current?.api) {
         const rowNode = gridRef.current.api.getRowNode(mandate_id);
         if (rowNode?.data) {
-          rowNode.setData({ ...rowNode.data, status, checkout_url: checkout_url || rowNode.data.checkout_url });
+          rowNode.setData({ ...rowNode.data, status: status as any, checkout_url: checkout_url || rowNode.data.checkout_url });
           gridRef.current.api.flashCells({ rowNodes: [rowNode], flashDelay: 800 });
         }
       }
@@ -115,8 +115,6 @@ export const App: React.FC = () => {
             <>
               <TopHeader
                 mandates={mandates}
-                onOpenSimulate={() => setIsSimulateOpen(true)}
-                onTriggerBurst={handleTriggerBurst}
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
               />

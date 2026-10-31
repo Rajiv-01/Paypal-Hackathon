@@ -5,7 +5,8 @@ import {
   CheckCircle2, Globe, MapPin, Zap, ChevronDown,
   ExternalLink, Sparkles, X, Shield, Bot, Building2,
   Activity, Radio, Server, Check, ArrowRight, Clock,
-  DollarSign, TrendingUp, AlertTriangle, FileText, UserCheck, Layers
+  DollarSign, TrendingUp, AlertTriangle, FileText, UserCheck, Layers,
+  Cpu, HardDrive, Wifi, ShieldCheck, Box
 } from 'lucide-react';
 
 export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMandate>> = (params) => {
@@ -50,43 +51,95 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
 
   // Geographic coordinates for global clearinghouse nodes
   const nodes = [
-    { id: 'US-EAST', name: 'New York (US-East)', x: 108, y: 44, latency: '14ms', isOrigin: (mandate.region || 'US-EAST') === 'US-EAST', flag: '🇺🇸' },
-    { id: 'US-WEST', name: 'San Francisco (US-West)', x: 62, y: 43, latency: '22ms', isOrigin: mandate.region === 'US-WEST', flag: '🇺🇸' },
-    { id: 'EU-CENTRAL', name: 'Frankfurt (EU-Central)', x: 198, y: 36, latency: '38ms', isOrigin: mandate.region === 'EU-CENTRAL', flag: '🇪🇺' },
-    { id: 'APAC', name: 'Singapore (APAC)', x: 298, y: 74, latency: '74ms', isOrigin: mandate.region === 'APAC', flag: '🇸🇬' },
+    { id: 'US-EAST', name: 'New York Logistics Hub (US-East)', x: 108, y: 44, latency: '14.2ms', isOrigin: (mandate.region || 'US-EAST') === 'US-EAST', flag: '🇺🇸', hub: 'JFK Enterprise Gateway' },
+    { id: 'US-WEST', name: 'Silicon Valley Transit Node (US-West)', x: 62, y: 43, latency: '22.0ms', isOrigin: mandate.region === 'US-WEST', flag: '🇺🇸', hub: 'SFO Data Logistics' },
+    { id: 'EU-CENTRAL', name: 'Frankfurt Central Distribution (EU-Central)', x: 198, y: 36, latency: '38.4ms', isOrigin: mandate.region === 'EU-CENTRAL', flag: '🇪🇺', hub: 'FRA Carrier Depot' },
+    { id: 'APAC', name: 'Singapore Regional Fulfillment (APAC)', x: 298, y: 74, latency: '74.1ms', isOrigin: mandate.region === 'APAC', flag: '🇸🇬', hub: 'SIN Pacific Air-Cargo' },
   ];
 
   const activeNode = nodes.find((n) => n.isOrigin) || nodes[0];
+
+  // Specific hardware specs generator based on product item
+  const getDeviceSpecs = (item: string) => {
+    if (item.includes('H100') || item.includes('Accelerator') || item.includes('GPU')) {
+      return {
+        model: 'NV-H100-SXM5-80GB',
+        arch: 'NVIDIA Hopper GH100 Tensor Architecture',
+        tdp: '700W Max TDP (Liquid-Cooled)',
+        interface: 'PCIe 5.0 x16 / 4x 100GbE QSFP56',
+        compliance: 'FIPS 140-3 Level 3 / TAA Compliant',
+        firmware: 'v4.19.0-LTS',
+        serialBatch: 'LOT-2026-H100-8840',
+        formFactor: 'SXM5 Mezzanine Accelerator Board',
+      };
+    }
+    if (item.includes('IoT') || item.includes('Gateway')) {
+      return {
+        model: 'IOT-GW-X9-RUGGED',
+        arch: 'Industrial ARM Cortex-A78 Octa-Core + 32 TOPS NPU',
+        tdp: '45W Passive Aluminum Heatsink',
+        interface: 'Dual 10GbE SFP+ / 4x RS-485 / CANbus 2.0B',
+        compliance: 'IEC 61850-3 / IEEE 1613 Substation Class',
+        firmware: 'v2.8.4 Embedded RTOS',
+        serialBatch: 'LOT-2026-IOT-5120',
+        formFactor: 'IP67 Ruggedized DIN-Rail Chassis',
+      };
+    }
+    if (item.includes('Security') || item.includes('HSM')) {
+      return {
+        model: 'HSM-QUANTUM-SECURE-V4',
+        arch: 'Post-Quantum Dual Crypto Co-Processor (Kyber/Dilithium)',
+        tdp: '25W Dedicated Active Bus Draw',
+        interface: 'PCIe 4.0 x8 Low-Profile / Dedicated Battery Backup',
+        compliance: 'FIPS 140-3 Level 4 (Active Tamper Erase)',
+        firmware: 'v6.0.1 Air-Gapped Microcode',
+        serialBatch: 'LOT-2026-HSM-9914',
+        formFactor: 'Half-Length PCIe Cryptographic Card',
+      };
+    }
+    return {
+      model: 'NEURAL-VISION-SENSOR-STATION-4K',
+      arch: 'Dual 4K Sony Starvis 2 + On-Device 48 TOPS Edge NPU',
+      tdp: '65W PoE++ (IEEE 802.3bt Type 4)',
+      interface: 'M12 X-Coded Gigabit Ethernet / Dual GigE Vision',
+      compliance: 'IP67 Weatherproof / EN 50155 Rolling Stock',
+      firmware: 'v3.12.0 VisionOS',
+      serialBatch: 'LOT-2026-VIS-4112',
+      formFactor: 'Precision Milled Anodized Aluminum Enclosure',
+    };
+  };
+
+  const device = getDeviceSpecs(mandate.item);
 
   // SVG chart coordinates
   const priceCurve = 'M 10,75 Q 60,40 120,65 T 220,50 T 310,65 T 390,35';
   const volumeArea = 'M 10,95 L 10,78 Q 60,70 120,80 T 220,65 T 310,75 T 390,55 L 390,95 Z';
 
   return (
-    <div className="bg-white border-y border-slate-200 p-3 font-sans text-xs text-slate-800 shadow-inner select-text relative">
+    <div className="bg-white border-y border-slate-200 p-3.5 font-sans text-xs text-slate-800 shadow-inner select-text relative">
       {/* Cryptographic 3D Seal Overlay (Toggleable) */}
       {sealActive && (
         <div className="absolute top-2 right-12 z-30 pointer-events-none animate-[bounce_1s_ease-in-out]">
-          <div className="px-3 py-1.5 rounded-lg bg-emerald-600/90 text-white shadow-lg border border-emerald-400 flex items-center gap-1.5 backdrop-blur-xs font-mono text-[11px] font-bold">
+          <div className="px-3 py-1.5 rounded-lg bg-emerald-600/95 text-white shadow-lg border border-emerald-400 flex items-center gap-1.5 backdrop-blur-xs font-mono text-[11px] font-bold">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>AP2 CRYPTO SEAL: 0x{mandate.mandate_id.slice(-6)}8F</span>
+            <span>AP2 HARDWARE ATTESTATION: 0x{mandate.mandate_id.slice(-6)}8F-SEALED</span>
           </div>
         </div>
       )}
 
       {/* 1. Sub-Tab Navigation Bar */}
-      <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-100 flex-wrap gap-2">
+      <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200/80 flex-wrap gap-2">
         {/* Left Sub-tabs */}
         <div className="flex items-center gap-3.5 text-xs font-semibold overflow-x-auto">
           {[
-            { id: 'overview', label: 'Overview' },
+            { id: 'overview', label: 'Overview (2×2 Grid)' },
             { id: 'price', label: 'Price & Market' },
-            { id: 'map', label: 'Geographical Map' },
-            { id: 'negotiation', label: 'Negotiation' },
-            { id: 'counterparty', label: 'Counterparty' },
-            { id: 'risk', label: 'Risk Analysis' },
-            { id: 'timeline', label: 'Timeline' },
-            { id: 'related', label: 'Related (4)' }
+            { id: 'map', label: 'Geographical Logistics' },
+            { id: 'negotiation', label: 'A2A Negotiation' },
+            { id: 'counterparty', label: 'Counterparty Dossier' },
+            { id: 'risk', label: 'Hardware Risk Audit' },
+            { id: 'timeline', label: 'Milestones' },
+            { id: 'related', label: 'Related Devices (4)' }
           ].map((t) => (
             <button
               key={t.id}
@@ -113,7 +166,7 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
               subTab === 'overview' ? 'bg-blue-600 text-white font-semibold' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
             }`}
           >
-            Grid View
+            2×2 Grid
           </button>
           <button
             type="button"
@@ -122,7 +175,7 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
               subTab === 'price' ? 'bg-blue-600 text-white font-semibold' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
             }`}
           >
-            Full Analytics
+            Pricing Curve
           </button>
           <button
             type="button"
@@ -157,86 +210,107 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
 
       {/* 2. TAB CONTENT ROUTER */}
 
-      {/* ── TAB 1: OVERVIEW (Modular 4-Box Grid-like Structure) ── */}
+      {/* ── TAB 1: OVERVIEW (2 Columns x 2 Rows = 4 Grids Layout) ── */}
       {subTab === 'overview' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          {/* Card 1: 3D Product Card & Key Metrics */}
-          <div className="bg-slate-50/70 p-3 rounded-lg border border-slate-200/80 flex flex-col justify-between space-y-2">
-            <div className="flex items-start gap-2.5">
-              <div className="relative w-12 h-12 rounded-lg bg-blue-600/10 border border-blue-200 flex items-center justify-center shrink-0 shadow-xs">
-                <span className="absolute top-0.5 left-1 text-[8px] font-mono font-bold text-blue-700 bg-blue-100 px-1 rounded">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          {/* GRID 1 (Row 1, Col 1): Electronic Device Specs & Hardware Architecture */}
+          <div className="bg-slate-50/80 p-3.5 rounded-lg border border-slate-200 flex flex-col justify-between space-y-2.5">
+            {/* Top Device Header */}
+            <div className="flex items-start gap-3">
+              <div className="relative w-14 h-14 rounded-lg bg-gradient-to-br from-blue-600/10 to-indigo-600/20 border border-blue-200 flex items-center justify-center shrink-0 shadow-xs">
+                <Cpu className="w-7 h-7 text-blue-600 animate-pulse" />
+                <span className="absolute -bottom-1 -right-1 text-[8px] font-mono font-bold text-white bg-blue-600 px-1 py-0.2 rounded">
                   AP2
                 </span>
-                <svg width="30" height="30" viewBox="0 0 40 40" className="overflow-visible">
-                  <polygon points="20,8 34,15 20,22 6,15" fill="#3b82f6" opacity="0.85" />
-                  <polygon points="6,15 20,22 20,34 6,27" fill="#1d4ed8" opacity="0.9" />
-                  <polygon points="34,15 20,22 20,34 34,27" fill="#60a5fa" opacity="0.8" />
-                  <circle cx="20" cy="20" r="3" fill="#ffffff" className="animate-pulse" />
-                </svg>
               </div>
 
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="font-bold text-xs text-slate-900 truncate">{mandate.item}</span>
-                  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase ${
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2">
+                  <h4 className="font-bold text-xs text-slate-900 truncate">{mandate.item}</h4>
+                  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase shrink-0 ${
                     isSettled ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'
                   }`}>
-                    {isSettled ? 'COMPLETED' : 'PENDING'}
+                    {isSettled ? 'COMPLETED' : 'PENDING APPROVAL'}
                   </span>
                 </div>
-                <div className="text-[10px] font-mono text-slate-400 mt-0.5 truncate">{mandate.mandate_id}</div>
-                <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5">
-                  High-throughput contract specs clearing through AP2 verified receiving agent.
+                <div className="text-[10px] font-mono text-slate-400 mt-0.5 flex items-center gap-2">
+                  <span>SKU: {device.model}</span>
+                  <span>•</span>
+                  <span>Batch: {device.serialBatch}</span>
+                </div>
+                <p className="text-[11px] text-slate-600 line-clamp-1 mt-1 font-medium">
+                  {device.arch}
                 </p>
               </div>
             </div>
 
-            {/* 5 Metrics in compact grid */}
-            <div className="grid grid-cols-5 gap-1 text-center pt-1 border-t border-slate-200/60">
+            {/* Hardware Specs Matrix */}
+            <div className="grid grid-cols-2 gap-2 bg-white p-2.5 rounded-md border border-slate-200/90 text-[10.5px]">
+              <div>
+                <span className="text-slate-400 font-mono text-[9px] block">Form Factor &amp; TDP:</span>
+                <span className="font-semibold text-slate-800">{device.tdp}</span>
+              </div>
+              <div>
+                <span className="text-slate-400 font-mono text-[9px] block">Interface &amp; Bus:</span>
+                <span className="font-semibold text-slate-800">{device.interface}</span>
+              </div>
+              <div>
+                <span className="text-slate-400 font-mono text-[9px] block">Firmware / Cert:</span>
+                <span className="font-semibold text-emerald-700">{device.compliance}</span>
+              </div>
+              <div>
+                <span className="text-slate-400 font-mono text-[9px] block">Security Architecture:</span>
+                <span className="font-semibold text-slate-800">Root-of-Trust Hardware TPM 2.0</span>
+              </div>
+            </div>
+
+            {/* Procurement Contract Terms */}
+            <div className="grid grid-cols-4 gap-1.5 text-center pt-1 border-t border-slate-200/80">
               <div className="p-1 bg-white rounded border border-slate-200">
-                <span className="text-[8px] text-slate-400 block font-mono">Value</span>
-                <span className="text-[10px] font-bold font-mono text-slate-900">${mandate.total_value.toFixed(0)}</span>
+                <span className="text-[8px] text-slate-400 block font-mono">Contract Qty</span>
+                <span className="text-[11px] font-bold font-mono text-slate-900">{mandate.quantity} Units</span>
               </div>
               <div className="p-1 bg-white rounded border border-slate-200">
-                <span className="text-[8px] text-slate-400 block font-mono">Price</span>
-                <span className="text-[10px] font-bold font-mono text-slate-900">${mandate.agreed_price.toFixed(0)}</span>
+                <span className="text-[8px] text-slate-400 block font-mono">Wholesale Price</span>
+                <span className="text-[11px] font-bold font-mono text-slate-900">${mandate.agreed_price.toFixed(2)}</span>
               </div>
               <div className="p-1 bg-white rounded border border-slate-200">
-                <span className="text-[8px] text-slate-400 block font-mono">Units</span>
-                <span className="text-[10px] font-bold font-mono text-slate-900">{mandate.quantity}</span>
+                <span className="text-[8px] text-slate-400 block font-mono">Total Order</span>
+                <span className="text-[11px] font-bold font-mono text-emerald-700">${mandate.total_value.toFixed(2)}</span>
               </div>
               <div className="p-1 bg-white rounded border border-slate-200">
-                <span className="text-[8px] text-slate-400 block font-mono">Risk</span>
-                <span className={`text-[10px] font-bold font-mono ${isHighRisk ? 'text-rose-600' : 'text-emerald-700'}`}>
+                <span className="text-[8px] text-slate-400 block font-mono">Risk Anomaly</span>
+                <span className={`text-[11px] font-bold font-mono ${isHighRisk ? 'text-rose-600' : 'text-emerald-700'}`}>
                   {mandate.risk_score}%
                 </span>
-              </div>
-              <div className="p-1 bg-white rounded border border-slate-200">
-                <span className="text-[8px] text-slate-400 block font-mono">Origin</span>
-                <span className="text-[10px] font-bold font-mono text-slate-800 truncate">{mandate.region || 'US-EAST'}</span>
               </div>
             </div>
           </div>
 
-          {/* Card 2: Geographical Map & Clearinghouse Routing */}
-          <div className="bg-slate-50/70 p-3 rounded-lg border border-slate-200/80 flex flex-col justify-between space-y-2">
+          {/* GRID 2 (Row 1, Col 2): Geographical Regional Logistics & Clearing Relay */}
+          <div className="bg-slate-50/80 p-3.5 rounded-lg border border-slate-200 flex flex-col justify-between space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 font-bold text-xs text-slate-900">
                 <Globe className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Geographical Region & Relay</span>
+                <span>Geographical Hardware Logistics &amp; Relay</span>
               </div>
-              <button
-                type="button"
-                onClick={() => setSubTab('map')}
-                className="text-[10px] text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-0.5"
-              >
-                <span>Full Map</span>
-                <ArrowRight className="w-3 h-3" />
-              </button>
+              <div className="flex items-center gap-2">
+                <span className="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-mono text-[9px] font-bold">
+                  SLA: {activeNode.latency}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setSubTab('map')}
+                  className="text-[10px] text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-0.5"
+                >
+                  <span>Full Map</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
             </div>
 
             {/* Geographical SVG World Map Snippet */}
-            <div className="relative bg-slate-950 rounded border border-slate-800 p-2 overflow-hidden flex flex-col items-center justify-center h-28">
+            <div className="relative bg-slate-950 rounded border border-slate-800 p-2 overflow-hidden flex flex-col items-center justify-center h-28 shadow-inner">
               <svg viewBox="0 0 400 110" className="w-full h-full opacity-90 overflow-visible">
                 <line x1="0" y1="28" x2="400" y2="28" stroke="#334155" strokeDasharray="2 3" strokeWidth="0.4" />
                 <line x1="0" y1="56" x2="400" y2="56" stroke="#334155" strokeDasharray="2 3" strokeWidth="0.4" />
@@ -248,11 +322,11 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
                 <path d="M 180,50 Q 225,50 215,85 T 190,105 T 165,75 Z" fill="#1e293b" stroke="#334155" strokeWidth="0.7" />
                 <path d="M 230,16 Q 320,12 365,38 T 325,72 T 250,60 Z" fill="#1e293b" stroke="#334155" strokeWidth="0.7" />
 
-                {/* Route arcs */}
+                {/* Route arcs connecting factories to delivery hub */}
                 <path d="M 108,38 Q 153,16 198,32" fill="none" stroke="#10b981" strokeWidth="1.2" strokeDasharray="3 2" />
                 <path d="M 108,38 Q 85,26 62,37" fill="none" stroke="#3b82f6" strokeWidth="1" strokeDasharray="3 2" />
 
-                {/* Pulsing origin pin */}
+                {/* Pulsing delivery origin pin */}
                 <circle cx={activeNode.x} cy={activeNode.y - 6} r="10" fill="none" stroke="#10b981" strokeWidth="1.5" className="animate-ping" opacity="0.6" />
                 <circle cx={activeNode.x} cy={activeNode.y - 6} r="5" fill="#10b981" />
                 <circle cx={activeNode.x} cy={activeNode.y - 6} r="2" fill="#ffffff" />
@@ -261,23 +335,33 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
               </svg>
             </div>
 
-            <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-0.5">
-              <span className="text-emerald-700 font-semibold">📍 {activeNode.name}</span>
-              <span className="px-1.5 py-0.2 rounded bg-slate-200/80 font-bold text-slate-700">14ms latency</span>
+            {/* Logistics Telemetry Strip */}
+            <div className="grid grid-cols-2 gap-2 text-[10.5px] bg-white p-2 rounded border border-slate-200">
+              <div className="flex items-center gap-1.5 truncate">
+                <span className="text-slate-400 font-mono text-[9px]">Hub:</span>
+                <span className="font-semibold text-slate-800 truncate">{activeNode.hub}</span>
+              </div>
+              <div className="flex items-center gap-1.5 truncate">
+                <span className="text-slate-400 font-mono text-[9px]">Export:</span>
+                <span className="font-semibold text-emerald-700 truncate">EAR99 / Dual-Use Cleared ✓</span>
+              </div>
             </div>
           </div>
 
-          {/* Card 3: Price & Market Analytics */}
-          <div className="bg-slate-50/70 p-3 rounded-lg border border-slate-200/80 flex flex-col justify-between space-y-2">
+          {/* GRID 3 (Row 2, Col 1): Wholesale Pricing Tiers & 12-Month Hardware Demand */}
+          <div className="bg-slate-50/80 p-3.5 rounded-lg border border-slate-200 flex flex-col justify-between space-y-2">
             <div className="flex items-center justify-between">
-              <div className="font-bold text-xs text-slate-900">Price &amp; Demand Velocity</div>
+              <div>
+                <span className="font-bold text-xs text-slate-900 block">Wholesale Pricing &amp; Hardware Demand</span>
+                <span className="text-[10px] text-slate-500">Tier volume pricing across enterprise customer fleets</span>
+              </div>
               <div className="flex items-center gap-1 text-[10px] font-semibold">
                 {['30D', '12M'].map((t) => (
                   <button
                     key={t}
                     type="button"
                     onClick={() => setTimeRange(t as any)}
-                    className={`px-1.5 py-0.2 rounded ${
+                    className={`px-1.5 py-0.5 rounded ${
                       timeRange === t ? 'bg-blue-600 text-white font-bold' : 'bg-white border border-slate-200 text-slate-600'
                     }`}
                   >
@@ -287,7 +371,7 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
               </div>
             </div>
 
-            {/* Sparkline Curve */}
+            {/* Price Sparkline SVG */}
             <div className="relative bg-white rounded border border-slate-200 p-2 h-20 flex items-center justify-center">
               <svg viewBox="0 0 380 70" className="w-full h-full overflow-visible">
                 <path d="M 5,55 Q 50,25 110,45 T 200,35 T 290,48 T 375,20" fill="none" stroke="#3b82f6" strokeWidth="2.2" strokeLinecap="round" />
@@ -295,51 +379,58 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
               </svg>
             </div>
 
-            {/* 12-month green revenue bars */}
-            <div className="pt-0.5">
-              <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 mb-1">
-                <span>Revenue Velocity</span>
-                <span className="font-bold text-emerald-600">+28.4% YoY</span>
+            {/* Revenue velocity and data center demand split */}
+            <div className="space-y-1.5 pt-1">
+              <div className="flex items-center justify-between text-[10px] font-mono text-slate-500">
+                <span>Hardware Velocity</span>
+                <span className="font-bold text-emerald-600">+28.4% YoY Delivery Growth</span>
               </div>
-              <div className="flex items-end gap-1 h-6">
-                {[25, 35, 45, 40, 55, 65, 60, 75, 85, 90, 80, 100].map((h, i) => (
-                  <div key={i} className="flex-1 bg-emerald-400 rounded-xs" style={{ height: `${h}%` }} />
-                ))}
+              <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden flex">
+                <div className="bg-blue-600 h-full" style={{ width: '52%' }} />
+                <div className="bg-purple-600 h-full" style={{ width: '24%' }} />
+                <div className="bg-amber-500 h-full" style={{ width: '16%' }} />
+                <div className="bg-slate-400 h-full" style={{ width: '8%' }} />
+              </div>
+              <div className="flex items-center justify-between text-[9px] font-mono text-slate-500">
+                <span>US-EAST 52%</span>
+                <span>EU-WEST 24%</span>
+                <span>APAC 16%</span>
+                <span>OTHERS 8%</span>
               </div>
             </div>
           </div>
 
-          {/* Card 4: Live A2A Dialogue & PayPal Settle */}
-          <div className="bg-slate-50/70 p-3 rounded-lg border border-slate-200/80 flex flex-col justify-between space-y-2">
-            <div className="flex items-center justify-between pb-1 border-b border-slate-200/60">
+          {/* GRID 4 (Row 2, Col 2): A2A Procurement Dialogue & Instant PayPal Settle */}
+          <div className="bg-slate-50/80 p-3.5 rounded-lg border border-slate-200 flex flex-col justify-between space-y-2">
+            <div className="flex items-center justify-between pb-1 border-b border-slate-200/80">
               <div className="font-bold text-xs text-slate-900 truncate">
-                A2A Dialogue ({mandate.mandate_id})
+                A2A Procurement Dialogue ({mandate.mandate_id})
               </div>
               <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Live</span>
+                <span>Live Negotiation</span>
               </span>
             </div>
 
-            {/* Timeline nodes snippet */}
-            <div className="space-y-1.5 max-h-[115px] overflow-y-auto pr-1 text-[10.5px]">
-              <div className="p-1.5 rounded bg-white border border-slate-200 leading-tight">
+            {/* Chat Transcript Bubbles */}
+            <div className="space-y-1.5 max-h-[110px] overflow-y-auto pr-1 text-[10.5px]">
+              <div className="p-2 rounded bg-white border border-slate-200 leading-tight">
                 <span className="text-[9px] font-mono font-bold text-blue-700 block mb-0.5">BUYER: {mandate.consumer_agent}</span>
-                <p className="text-slate-700 truncate">Inbound: {mandate.quantity} units @ ${mandate.agreed_price - 15}/unit</p>
+                <p className="text-slate-700">Procurement bid: {mandate.quantity} units of {mandate.item} @ ${(mandate.agreed_price * 0.9).toFixed(2)}/unit.</p>
               </div>
-              <div className="p-1.5 rounded bg-white border border-slate-200 leading-tight">
-                <span className="text-[9px] font-mono font-bold text-purple-700 block mb-0.5">MERCHANT: AUTONOPAY GATE</span>
-                <p className="text-slate-700 truncate">Counter: ${mandate.agreed_price.toFixed(2)} agreed under SLA</p>
+              <div className="p-2 rounded bg-white border border-slate-200 leading-tight">
+                <span className="text-[9px] font-mono font-bold text-purple-700 block mb-0.5">MERCHANT: AUTONOPAY HARDWARE GATE</span>
+                <p className="text-slate-700">Margin compliance verified. Counter-offer locked at ${mandate.agreed_price.toFixed(2)}/unit with 3-yr factory SLA.</p>
               </div>
             </div>
 
-            {/* Action Button */}
+            {/* PayPal Settlement Button */}
             <div className="pt-1">
               {isSettled ? (
                 <div className="p-2 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Settled via PayPal</span>
+                    <span>Settled via PayPal Enterprise</span>
                   </div>
                   <a
                     href={mandate.checkout_url || '#'}
@@ -347,7 +438,7 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:underline flex items-center gap-1 text-[10px] font-mono"
                   >
-                    <span>Receipt</span>
+                    <span>PayPal Receipt</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
@@ -359,7 +450,7 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
                   className="w-full flex items-center justify-center gap-1.5 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-colors disabled:opacity-50"
                 >
                   {isSettling ? (
-                    <span>Executing Settlement...</span>
+                    <span>Executing PayPal Settlement...</span>
                   ) : (
                     <>
                       <Zap className="w-3.5 h-3.5 fill-white" />
@@ -398,7 +489,6 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-            {/* Left 2 Cols: Large Price Curve */}
             <div className="lg:col-span-2 bg-white rounded-lg p-3 border border-slate-200">
               <svg viewBox="0 0 400 110" className="w-full h-32 overflow-visible">
                 <defs>
@@ -417,7 +507,7 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
                 <g transform="translate(240, 22)">
                   <rect x="-35" y="-18" width="70" height="26" rx="4" fill="#0f172a" />
                   <text x="0" y="-8" textAnchor="middle" fill="#94a3b8" fontSize="8" fontFamily="monospace">Aug 12, 2026</text>
-                  <text x="0" y="2" textAnchor="middle" fill="#38bdf8" fontSize="8" fontWeight="bold" fontFamily="monospace">Price $86.40</text>
+                  <text x="0" y="2" textAnchor="middle" fill="#38bdf8" fontSize="8" fontWeight="bold" fontFamily="monospace">Price $245.00</text>
                   <circle cx="0" cy="16" r="3" fill="#3b82f6" stroke="#ffffff" strokeWidth="1.5" />
                 </g>
               </svg>
@@ -426,10 +516,9 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
               </div>
             </div>
 
-            {/* Right Col: Demand Breakdown */}
             <div className="bg-white rounded-lg p-3 border border-slate-200 flex flex-col justify-between space-y-2">
               <div className="space-y-1">
-                <span className="font-bold text-xs text-slate-900 block">Regional Demand Split</span>
+                <span className="font-bold text-xs text-slate-900 block">Regional Data Center Demand Split</span>
                 <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden flex">
                   <div className="bg-blue-600 h-full" style={{ width: '52%' }} />
                   <div className="bg-purple-600 h-full" style={{ width: '24%' }} />
@@ -444,7 +533,7 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
               </div>
 
               <div className="p-2 rounded bg-slate-50 border border-slate-200 text-[11px]">
-                <div className="text-[10px] font-mono text-slate-400 uppercase">Unit Margin</div>
+                <div className="text-[10px] font-mono text-slate-400 uppercase">Hardware Gross Margin</div>
                 <div className="text-base font-bold font-mono text-emerald-700 mt-0.5">+24.2% Net</div>
               </div>
             </div>
@@ -461,22 +550,21 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
                 <Globe className="w-4 h-4 animate-spin-slow" />
               </div>
               <div>
-                <h4 className="font-bold text-xs text-white">AP2 Global Clearinghouse &amp; Routing Topology</h4>
-                <p className="text-[10px] text-slate-400">Autonomous A2A agent transaction transit network</p>
+                <h4 className="font-bold text-xs text-white">AP2 Global Hardware Clearinghouse &amp; Logistics Relay</h4>
+                <p className="text-[10px] text-slate-400">Autonomous hardware dispatch transit corridors</p>
               </div>
             </div>
             <div className="flex items-center gap-2 text-[10px] font-mono">
               <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                Active Origin: {activeNode.name}
+                Active Hub: {activeNode.name}
               </span>
               <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">
-                Clearing SLA: 14.2ms
+                SLA: {activeNode.latency}
               </span>
             </div>
           </div>
 
-          {/* Large High-Tech World Map SVG */}
           <div className="relative bg-slate-900/60 rounded-lg p-3 border border-slate-800/80 overflow-hidden">
             <svg viewBox="0 0 420 145" className="w-full h-36 overflow-visible">
               <defs>
@@ -549,11 +637,11 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
         <div className="bg-slate-50/80 p-4 rounded-lg border border-slate-200 space-y-3">
           <div className="flex items-center justify-between pb-2 border-b border-slate-200">
             <div>
-              <h3 className="font-bold text-xs text-slate-900">A2A Negotiation Log: {mandate.mandate_id}</h3>
-              <p className="text-[11px] text-slate-500">Autonomous consensus trail synthesized between buyer and merchant agent</p>
+              <h3 className="font-bold text-xs text-slate-900">A2A Procurement Dialogue: {mandate.mandate_id}</h3>
+              <p className="text-[11px] text-slate-500">Autonomous hardware supply terms synthesized between enterprise buyer and merchant gate</p>
             </div>
             <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-              Contract Locked
+              Contract Terms Agreed
             </span>
           </div>
 
@@ -574,7 +662,7 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
               className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-colors disabled:opacity-50 flex items-center gap-1.5"
             >
               <Zap className="w-3.5 h-3.5 fill-white" />
-              <span>{isSettled ? 'Settled via PayPal ✓' : `Authorize & Settle via PayPal ($${mandate.total_value.toFixed(2)})`}</span>
+              <span>{isSettled ? 'Settled via PayPal Enterprise ✓' : `Authorize & Settle via PayPal ($${mandate.total_value.toFixed(2)})`}</span>
             </button>
           </div>
         </div>
@@ -583,22 +671,22 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
       {/* ── TAB 5: COUNTERPARTY DOSSIER ── */}
       {subTab === 'counterparty' && (
         <div className="bg-slate-50/80 p-4 rounded-lg border border-slate-200 space-y-3">
-          <h3 className="font-bold text-xs text-slate-900">Counterparty Agent Verification Dossier</h3>
+          <h3 className="font-bold text-xs text-slate-900">Procurement Counterparty Agent Dossier</h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="p-3 bg-white rounded border border-slate-200 space-y-1">
-              <span className="text-[10px] font-mono text-slate-400 uppercase">Agent Identity</span>
+              <span className="text-[10px] font-mono text-slate-400 uppercase">Buyer Identity</span>
               <div className="text-sm font-bold text-slate-900">{mandate.consumer_agent}</div>
-              <span className="inline-block px-1.5 py-0.2 rounded bg-blue-50 text-blue-700 font-mono text-[9px] font-bold">Verified Peer</span>
+              <span className="inline-block px-1.5 py-0.2 rounded bg-blue-50 text-blue-700 font-mono text-[9px] font-bold">Verified Enterprise Agent</span>
             </div>
             <div className="p-3 bg-white rounded border border-slate-200 space-y-1">
-              <span className="text-[10px] font-mono text-slate-400 uppercase">Clearance Reliability</span>
+              <span className="text-[10px] font-mono text-slate-400 uppercase">Hardware Fulfillment Rate</span>
               <div className="text-sm font-bold text-emerald-700 font-mono">99.4% SLA</div>
-              <span className="text-[10px] text-slate-500">142 successful mandates</span>
+              <span className="text-[10px] text-slate-500">142 equipment orders settled</span>
             </div>
             <div className="p-3 bg-white rounded border border-slate-200 space-y-1">
-              <span className="text-[10px] font-mono text-slate-400 uppercase">Spending Authority</span>
+              <span className="text-[10px] font-mono text-slate-400 uppercase">Treasury Credit Ceiling</span>
               <div className="text-sm font-bold text-slate-900 font-mono">${(mandate.total_value * 2.5).toFixed(2)} Cap</div>
-              <span className="text-[10px] text-slate-500">Treasury verified</span>
+              <span className="text-[10px] text-slate-500">Corporate credit pre-authorized</span>
             </div>
           </div>
         </div>
@@ -607,29 +695,29 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
       {/* ── TAB 6: RISK ANALYSIS ── */}
       {subTab === 'risk' && (
         <div className="bg-slate-50/80 p-4 rounded-lg border border-slate-200 space-y-3">
-          <h3 className="font-bold text-xs text-slate-900">AP2 Multi-Vector Risk Assessment</h3>
+          <h3 className="font-bold text-xs text-slate-900">Hardware Delivery &amp; Cryptographic Risk Audit</h3>
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
             <div className="p-2.5 bg-white rounded border border-slate-200">
-              <span className="text-[9px] font-mono text-slate-400 block">Anomaly Score</span>
+              <span className="text-[9px] font-mono text-slate-400 block">Anomaly Index</span>
               <span className={`text-base font-bold font-mono ${isHighRisk ? 'text-rose-600' : 'text-emerald-700'}`}>
                 {mandate.risk_score}%
               </span>
-              <span className="text-[9px] text-slate-400 block mt-0.5">{isHighRisk ? 'Manual Signoff Req' : 'Auto Clear'}</span>
+              <span className="text-[9px] text-slate-400 block mt-0.5">{isHighRisk ? 'Manual Clearance' : 'Auto Clear'}</span>
             </div>
             <div className="p-2.5 bg-white rounded border border-slate-200">
-              <span className="text-[9px] font-mono text-slate-400 block">Subnet Integrity</span>
+              <span className="text-[9px] font-mono text-slate-400 block">Root-of-Trust Check</span>
               <span className="text-base font-bold font-mono text-blue-700">PASS</span>
-              <span className="text-[9px] text-slate-400 block mt-0.5">Origin ASN verified</span>
+              <span className="text-[9px] text-slate-400 block mt-0.5">TPM 2.0 Attested</span>
             </div>
             <div className="p-2.5 bg-white rounded border border-slate-200">
-              <span className="text-[9px] font-mono text-slate-400 block">Margin Floor</span>
+              <span className="text-[9px] font-mono text-slate-400 block">Margin Compliance</span>
               <span className="text-base font-bold font-mono text-emerald-700">18.5% OK</span>
-              <span className="text-[9px] text-slate-400 block mt-0.5">Complies with rules</span>
+              <span className="text-[9px] text-slate-400 block mt-0.5">Above wholesale floor</span>
             </div>
             <div className="p-2.5 bg-white rounded border border-slate-200">
-              <span className="text-[9px] font-mono text-slate-400 block">Settlement Channel</span>
-              <span className="text-base font-bold font-mono text-slate-900">PayPal REST</span>
-              <span className="text-[9px] text-slate-400 block mt-0.5">Encrypted v2 orders</span>
+              <span className="text-[9px] font-mono text-slate-400 block">Payment Rail</span>
+              <span className="text-base font-bold font-mono text-slate-900">PayPal REST v2</span>
+              <span className="text-[9px] text-slate-400 block mt-0.5">Encrypted commercial order</span>
             </div>
           </div>
         </div>
@@ -638,15 +726,15 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
       {/* ── TAB 7: TIMELINE ── */}
       {subTab === 'timeline' && (
         <div className="bg-slate-50/80 p-4 rounded-lg border border-slate-200 space-y-2">
-          <h3 className="font-bold text-xs text-slate-900">Mandate Lifecycle Milestones</h3>
+          <h3 className="font-bold text-xs text-slate-900">Equipment Procurement Milestones</h3>
           <div className="space-y-1.5 text-xs font-mono">
             <div className="flex items-center gap-2 p-1.5 rounded bg-white border border-slate-200">
               <span className="text-emerald-600 font-bold">10:24:01</span>
-              <span className="text-slate-700">A2A Handshake initiated by {mandate.consumer_agent}</span>
+              <span className="text-slate-700">Hardware Procurement handshake initiated by {mandate.consumer_agent}</span>
             </div>
             <div className="flex items-center gap-2 p-1.5 rounded bg-white border border-slate-200">
               <span className="text-emerald-600 font-bold">10:24:02</span>
-              <span className="text-slate-700">Margin compliance checked against minimum policy</span>
+              <span className="text-slate-700">Wholesale pricing margin checked against reserve policy</span>
             </div>
             <div className="flex items-center gap-2 p-1.5 rounded bg-white border border-slate-200">
               <span className="text-emerald-600 font-bold">10:24:03</span>
@@ -654,7 +742,7 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
             </div>
             <div className="flex items-center gap-2 p-1.5 rounded bg-white border border-slate-200">
               <span className="text-blue-600 font-bold">10:25:00</span>
-              <span className="text-slate-700">Awaiting human authorization for PayPal settlement</span>
+              <span className="text-slate-700">Awaiting merchant human authorization for PayPal release</span>
             </div>
           </div>
         </div>
@@ -663,7 +751,7 @@ export const RichExpandedDetailPanel: React.FC<IDetailCellRendererParams<CartMan
       {/* ── TAB 8: RELATED MANDATES ── */}
       {subTab === 'related' && (
         <div className="bg-slate-50/80 p-4 rounded-lg border border-slate-200 space-y-2">
-          <h3 className="font-bold text-xs text-slate-900">Related Mandates in Same Category ({mandate.item})</h3>
+          <h3 className="font-bold text-xs text-slate-900">Related Electronic Equipment Contracts</h3>
           <div className="space-y-1 text-xs">
             {['req_init_1001', 'req_init_1002', 'req_init_1004'].map((id, idx) => (
               <div key={id} className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
